@@ -31,11 +31,17 @@
     var pendingMessages = [];
     var mock = false;
     var existingMocks = {};
+    var openFailures = {};
 
     function $MockWebSocket(url, protocols) {
       this.url = url;
       this.protocols = protocols;
       this.ssl = /(wss)/i.test(this.url);
+
+      if (openFailures[url]) {
+        throw openFailures[url];
+      }
+
       if (!existingMocks[url]) {
         existingMocks[url] = [this];
       } else {
@@ -51,6 +57,10 @@
       if (mock) {
         return sendQueue.shift();
       }
+    };
+
+    this.fakeOpenFailure = function (url, error) {
+      openFailures[url] = error;
     };
 
     this.fakeClose = function (url, code) {
