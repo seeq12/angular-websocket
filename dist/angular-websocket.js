@@ -95,6 +95,7 @@
       this.binaryType = options && options.binaryType || 'blob';
 
       this._reconnectAttempts = 0;
+      this._reconnectTimer = undefined;
       this.sendQueue = [];
       this.onOpenCallbacks = [];
       this.onMessageCallbacks = [];
@@ -119,7 +120,6 @@
     };
 
     $WebSocket.prototype._normalCloseCode = 1000;
-
     $WebSocket.prototype._reconnectableStatusCodes = [4000];
 
     $WebSocket.prototype.safeDigest = function safeDigest(autoApply) {
@@ -286,6 +286,7 @@
       if (force || !this.socket.bufferedAmount) {
         this.socket.close();
       }
+      $timeout.cancel(this._reconnectTimer);
       return this;
     };
 
@@ -332,7 +333,7 @@
       var backoffDelaySeconds = backoffDelay / 1000;
       console.log('Reconnecting in ' + backoffDelaySeconds + ' seconds');
 
-      $timeout(_angular2.default.bind(this, this._connect), backoffDelay);
+      this._reconnectTimer = $timeout(_angular2.default.bind(this, this._connect), backoffDelay);
 
       return this;
     };

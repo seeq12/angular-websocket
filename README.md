@@ -139,8 +139,9 @@ flush                          |            | Executes all pending requests
 expectConnect                  | url:String | Specify the url of an expected WebSocket connection
 expectClose                    | url:String | Expect "close" to be called on the WebSocket
 expectSend                     | msg:String | Expectation of send to be called, with required message
+fakeOpenFailure                | url:String, msg:String | Used to throw an error when attempting to open the specified url
 fakeClose                      | url:String | Used to fake close a socket and test corresponding close handlers
-fakeMessage                    | url:String, data:object | Used to fake a backend initialized send action, which can be handled in onMessage
+fakeMessage                    | url:String, data:object | Used to fake a backend initiated send action, which can be handled in onMessage
 verifyNoOutstandingExpectation |            | Makes sure all expectations have been satisfied, should be called in afterEach
 verifyNoOutstandingRequest     |            | Makes sure no requests are pending, should be called in afterEach
 
@@ -191,7 +192,7 @@ In the project root directory open `index.html` in the example folder or browser
  * Add PubNub support
 ___
 
-enjoy — **AngularClass** 
+enjoy — **AngularClass**
 
 <br><br>
 

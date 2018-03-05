@@ -69,6 +69,7 @@ function $WebSocketProvider($rootScope, $q, $timeout, $websocketBackend) {
     this.binaryType                  = options && options.binaryType                 || 'blob';
 
     this._reconnectAttempts = 0;
+    this._reconnectTimer    = undefined;
     this.sendQueue          = [];
     this.onOpenCallbacks    = [];
     this.onMessageCallbacks = [];
@@ -94,10 +95,7 @@ function $WebSocketProvider($rootScope, $q, $timeout, $websocketBackend) {
   };
 
   $WebSocket.prototype._normalCloseCode = 1000;
-
-  $WebSocket.prototype._reconnectableStatusCodes = [
-    4000
-  ];
+  $WebSocket.prototype._reconnectableStatusCodes = [4000];
 
   $WebSocket.prototype.safeDigest = function safeDigest(autoApply) {
     if (autoApply && !this.scope.$$phase) {
@@ -269,6 +267,7 @@ function $WebSocketProvider($rootScope, $q, $timeout, $websocketBackend) {
     if (force || !this.socket.bufferedAmount) {
       this.socket.close();
     }
+    $timeout.cancel(this._reconnectTimer);
     return this;
   };
 
@@ -316,7 +315,7 @@ function $WebSocketProvider($rootScope, $q, $timeout, $websocketBackend) {
     var backoffDelaySeconds = backoffDelay / 1000;
     console.log('Reconnecting in ' + backoffDelaySeconds + ' seconds');
 
-    $timeout(angular.bind(this, this._connect), backoffDelay);
+    this._reconnectTimer = $timeout(angular.bind(this, this._connect), backoffDelay);
 
     return this;
   };
