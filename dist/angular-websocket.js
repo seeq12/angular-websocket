@@ -1,16 +1,16 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(['module', 'exports', 'angular', 'ws'], factory);
+    define(['module', 'exports', 'angular'], factory);
   } else if (typeof exports !== "undefined") {
-    factory(module, exports, require('angular'), require('ws'));
+    factory(module, exports, require('angular'));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod, mod.exports, global.angular, global.ws);
+    factory(mod, mod.exports, global.angular);
     global.angularWebsocket = mod.exports;
   }
-})(this, function (module, exports, _angular, ws) {
+})(this, function (module, exports, _angular) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -25,17 +25,8 @@
     };
   }
 
-  var Socket;
-
-  if (typeof window === 'undefined') {
-    try {
-
-      Socket = ws.Client || ws.client || ws;
-    } catch (e) {}
-  }
-
   // Browser
-  Socket = Socket || window.WebSocket || window.MozWebSocket;
+  var Socket = window.WebSocket || window.MozWebSocket;
 
   var noop = _angular2.default.noop;
   var objectFreeze = Object.freeze ? Object.freeze : noop;

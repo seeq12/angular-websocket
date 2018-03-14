@@ -1,17 +1,7 @@
 import angular from 'angular';
 
-var Socket;
-
-if (typeof window === 'undefined') {
-  try {
-    var ws = require('ws');
-
-    Socket = (ws.Client || ws.client || ws);
-  } catch(e) {}
-}
-
 // Browser
-Socket = (Socket || window.WebSocket || window.MozWebSocket);
+var Socket = (window.WebSocket || window.MozWebSocket);
 
 var noop = angular.noop;
 var objectFreeze  = (Object.freeze) ? Object.freeze : noop;
